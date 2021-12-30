@@ -4,14 +4,23 @@ APP_NAME?=java-docker
 TAG?=latest
 PORT?=8080
 APP_DIR?=app
+MOUNT ?= -v "${CURDIR}":/${APP_DIR}
+UNAME := $(shell uname)
 
-.PHONY: clean init dev
+ifeq ($(UNAME),Darwin)
+	ifeq ($(DOCKER),podman)
+		MOUNT =
+		APP_DIR =
+	endif	 
+endif
+
+.PHONY: clean init dev stop console
 
 clean:
 
 init:
 	${DOCKER} build \
-		-f Dockerfile app/ \
+		app/ \
 		-t ${APP_NAME}:${TAG} \
 		--build-arg TAG=${TAG} 
 
@@ -20,7 +29,7 @@ dev:
 		--name ${APP_NAME} \
 		--rm \
 		-p ${PORT}:${PORT} \
-		-v "${CURDIR}":/${APP_DIR} \
+		${MOUNT} \
 		${APP_NAME}:${TAG} \
 		-c "cd /app/${APP_DIR} && ./mvnw $(filter-out $@,$(MAKECMDGOALS))"
 
