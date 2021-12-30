@@ -20,7 +20,7 @@ clean:
 
 init:
 	${DOCKER} build \
-		app/ \
+		-f Dockerfile app/ \
 		-t ${APP_NAME}:${TAG} \
 		--build-arg TAG=${TAG} 
 
