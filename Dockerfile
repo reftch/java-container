@@ -1,4 +1,6 @@
-FROM docker.io/openjdk:11
+ARG TAG=11
+
+FROM docker.io/openjdk:${TAG}
 
 WORKDIR /app
 

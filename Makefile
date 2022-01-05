@@ -1,7 +1,7 @@
 
 DOCKER?=
 APP_NAME?=java-docker
-TAG?=latest
+TAG?=16
 PORT?=8080
 APP_DIR?=app
 ATTACH_ENV?=-a=stdin -a=stdout -a=stderr
@@ -10,10 +10,10 @@ MOUNT ?= -v "${CURDIR}":/${APP_DIR}
 UNAME := $(shell uname)
 
 ifeq ($(UNAME),Darwin)
-	ifeq ($(DOCKER),podman)
-		MOUNT =
-		APP_DIR =
-	endif	 
+  ifeq ($(DOCKER),podman)
+    MOUNT =
+    APP_DIR =
+  endif	 
 endif
 
 HAS_DOCKER ?= $(shell command -v docker > /dev/null 2>&1; [ $$? -eq 0 ] && echo 1 || echo 0)
@@ -23,7 +23,7 @@ ifeq ($(DOCKER), )
   ifeq ($(HAS_DOCKER), 1)
     DOCKER=docker
   endif
-	ifeq ($(HAS_PODMAN), 1)
+  ifeq ($(HAS_PODMAN), 1)
     DOCKER=podman
   endif
 endif

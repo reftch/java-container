@@ -16,9 +16,9 @@
 	<description>Demo project for Spring Boot</description>
 	<packaging>jar</packaging>
 	
-	<properties>
+	<!-- <properties>
 		<java.version>11</java.version>
-	</properties>
+	</properties> -->
 
 	<dependencies>
 		<dependency>
