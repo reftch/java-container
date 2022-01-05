@@ -37,3 +37,4 @@ cd java-container
   ```
   make stop
   ```
+  or just push Ctrl-C
