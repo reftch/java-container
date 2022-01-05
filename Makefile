@@ -32,15 +32,15 @@ DOCKERRUN=${DOCKER} container run \
   --name ${APP_NAME} \
   --rm \
 	-t \
-	${PORT_ENV} \
-	${PROXY_ENV} \
-	${ATTACH_ENV} \
-	${SECURITY_ENV} \
-	${VOLUME_ENV} \
-	${APP_NAME}:${TAG}
+  ${PORT_ENV} \
+  ${PROXY_ENV} \
+  ${ATTACH_ENV} \
+  ${SECURITY_ENV} \
+  ${VOLUME_ENV} \
+  ${APP_NAME}:${TAG}
 
 DOCKERBUILD=${DOCKER} build \
-	--build-arg TAG=${TAG} 
+  --build-arg TAG=${TAG} 
 
 .PHONY: clean init dev stop console
 
