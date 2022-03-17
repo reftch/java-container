@@ -1,13 +1,15 @@
 
 DOCKER?=
 APP_NAME?=java-docker
-TAG?=16
-PORT?=8080
+TAG?=11
+FROM?=docker.io/openjdk
+PORT?=8090
 APP_DIR?=app
 ATTACH_ENV?=-a=stdin -a=stdout -a=stderr
 SECURITY_ENV?=--security-opt label=disable
-MOUNT ?= -v "${CURDIR}":/${APP_DIR}
 UNAME := $(shell uname)
+VOLUME_ENV=-v "${CURDIR}":/${APP_DIR}
+PORT_ENV=-p ${PORT}:8888
 
 ifeq ($(UNAME),Darwin)
   ifeq ($(DOCKER),podman)
@@ -33,24 +35,27 @@ DOCKERRUN=${DOCKER} container run \
   --rm \
 	-t \
   ${PORT_ENV} \
-  ${PROXY_ENV} \
   ${ATTACH_ENV} \
   ${SECURITY_ENV} \
   ${VOLUME_ENV} \
   ${APP_NAME}:${TAG}
 
 DOCKERBUILD=${DOCKER} build \
-  --build-arg TAG=${TAG} 
+	--build-arg FROM=${FROM} \
+	--build-arg TAG=${TAG}
 
 .PHONY: clean init dev stop console
 
 clean:
 
 init:
-	${DOCKERBUILD} -f Dockerfile app/ -t ${APP_NAME}:${TAG}
+	${DOCKERBUILD} -f .config/docker-config/java.dockerfile . -t ${APP_NAME}:${TAG}
 
 dev:
-	${DOCKERRUN} -c "cd /${APP_DIR} && ./mvnw $(filter-out $@,$(MAKECMDGOALS))"
+	${DOCKERRUN} -c "cd /app/${APP_DIR} && ./mvnw spring-boot:run"
+
+build:
+	${DOCKERRUN} -c "cd /app/${APP_DIR} && ./mvnw clean package"
 
 stop:
 	${DOCKER} container stop ${APP_NAME}
@@ -66,4 +71,3 @@ endif
 
 %:
 	@:
-# ref: https://stackoverflow.com/questions/6273608/how-to-pass-argument-to-makefile-from-command-line
